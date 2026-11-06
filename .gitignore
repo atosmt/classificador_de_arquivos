@@ -1,10 +1,30 @@
-
-# Dados e imagens privadas
-imagens/
+# Dados de documentos e imagens — nunca publicar
 arquivos/
+imagens/
+dataset_rgs/
+Projeto_Suzana/
+dados_privados/
 *.csv
+*.jpg
+*.jpeg
+*.png
+*.tif
+*.tiff
+*.bmp
+*.webp
 
-# Configurações locais
+# Configurações e arquivos temporários
 .env
+.env.*
+!.env.example
+.venv/
+venv/
 __pycache__/
 .ipynb_checkpoints/
+.pytest_cache/
+*.pyc
+
+# Modelos gerados localmente (modelo legado já versionado permanece no Git)
+*.joblib
+*.pkl
+# O arquivo random_forest.pkl já rastreado no Git continua preservado.
