@@ -1,8 +1,8 @@
-
-pandas
-numpy
-opencv-python-headless
-pytesseract
-scikit-learn
-matplotlib
-seaborn
+# Dependências Python do projeto
+pandas>=2.0,<3
+numpy>=1.26,<3
+opencv-python-headless>=4.8,<5
+pytesseract>=0.3.10,<1
+scikit-learn>=1.4,<2
+matplotlib>=3.8,<4
+nbformat>=5.8,<6
