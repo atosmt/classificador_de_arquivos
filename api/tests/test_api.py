@@ -1,4 +1,3 @@
-"""Testes da camada HTTP; sem OCR/modelo para serem rápidos."""
 import base64
 import io
 from PIL import Image
@@ -114,4 +113,3 @@ def test_predict_base64(monkeypatch):
 
     assert resposta.status_code == 200
     assert resposta.json()["classe"] == "rg_antigo"
-

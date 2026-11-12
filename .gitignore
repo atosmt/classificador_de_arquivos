@@ -1,4 +1,3 @@
-# Dados de documentos e imagens — nunca publicar
 arquivos/
 imagens/
 dataset_rgs/
@@ -13,7 +12,6 @@ dados_privados/
 *.bmp
 *.webp
 
-# Configurações e arquivos temporários
 .env
 .env.*
 !.env.example
@@ -24,7 +22,5 @@ __pycache__/
 .pytest_cache/
 *.pyc
 
-# Modelos gerados localmente (modelo legado já versionado permanece no Git)
 *.joblib
 *.pkl
-# O arquivo random_forest.pkl já rastreado no Git continua preservado.

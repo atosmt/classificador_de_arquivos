@@ -1,4 +1,3 @@
-"""API de classificação de RG. Os bytes das imagens não são persistidos."""
 import asyncio
 import base64
 import binascii
@@ -24,7 +23,6 @@ TIPOS_ACEITOS = {'image/jpeg', 'image/png', 'image/webp', 'image/bmp', 'image/ti
 
 class ImagemBase64(BaseModel):
     imagem_base64: str = Field(min_length=1, max_length=8_000_000)
-
 
 
 def decodificar_imagem(dados: bytes) -> np.ndarray:
@@ -90,8 +88,6 @@ def processar(dados: bytes) -> dict:
         features = extrair_features(imagem)
         return prever(features)
     except Exception as exc:
-        # Não devolver detalhes internos ou OCR com dados pessoais ao cliente.
-        # Erros de instalação são diagnosticados localmente no terminal.
         raise HTTPException(status_code=500, detail='Falha ao processar imagem') from exc
 
 

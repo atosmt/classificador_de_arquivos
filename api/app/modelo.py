@@ -1,8 +1,3 @@
-"""Carrega somente artefatos de modelo locais e confiáveis.
-
-Não abra modelos pickle/joblib de fontes desconhecidas: desserializar pode
-executar código. O bundle deve ser gerado pelo nosso exportador.
-"""
 from functools import lru_cache
 from pathlib import Path
 import os

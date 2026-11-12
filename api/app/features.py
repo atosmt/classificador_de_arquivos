@@ -1,8 +1,3 @@
-"""Extração de atributos alinhada ao notebook analise_imagens.ipynb.
-
-Não persiste texto OCR nem imagens. Os nomes das features mantêm a
-compatibilidade com analise_documentos.csv.
-"""
 import re
 import unicodedata
 
@@ -32,7 +27,6 @@ def ler_melhor_texto(imagem_bgr: np.ndarray):
     melhor = ('', 'original', -1, -1.0)
     for nome, rotacionada in orientacoes:
         cinza = cv2.cvtColor(rotacionada, cv2.COLOR_BGR2GRAY)
-        # Tempo limitado por orientação: protege o servidor de OCR muito demorado.
         dados = pytesseract.image_to_data(
             cinza, lang='por', config='--psm 6', output_type=Output.DICT,
             timeout=12,
@@ -60,11 +54,6 @@ def ler_melhor_texto(imagem_bgr: np.ndarray):
 
 
 def extrair_features(imagem_bgr: np.ndarray) -> dict:
-    """Recebe imagem OpenCV BGR, devolve as 23 colunas do notebook.
-
-    `classe` não entra aqui porque é rótulo, conhecido somente no treino.
-    `arquivo` serve como identificador e será ignorado pelo modelo.
-    """
     altura, largura = imagem_bgr.shape[:2]
     texto, orientacao, pontuacao, confianca = ler_melhor_texto(imagem_bgr)
     texto_normalizado = normalizar_texto(texto)

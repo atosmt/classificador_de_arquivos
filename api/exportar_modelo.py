@@ -1,8 +1,3 @@
-"""Treina e exporta o mesmo pipeline Random Forest do notebook atual.
-
-Uso: python exportar_modelo.py CAMINHO_DO_CSV
-O CSV permanece no computador; nunca é adicionado ao ZIP/Git.
-"""
 import sys
 from pathlib import Path
 
