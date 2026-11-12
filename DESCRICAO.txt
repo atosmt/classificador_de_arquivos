@@ -1,0 +1,7 @@
+Nome do projeto: Classificador de RG
+
+Objetivo:
+Classificar imagens de documentos como RG antigo, RG novo ou documento inválido.
+
+Descrição:
+O projeto extrai características das imagens com visão computacional e OCR, utiliza um modelo Random Forest para a classificação e disponibiliza as previsões por uma API.
