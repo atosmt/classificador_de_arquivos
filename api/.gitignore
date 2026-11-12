@@ -1,0 +1,15 @@
+# Dados de identidade e modelos serializados
+*.csv
+*.jpg
+*.jpeg
+*.png
+*.webp
+*.bmp
+*.tiff
+*.tif
+*.pkl
+*.joblib
+.env
+.venv/
+__pycache__/
+.pytest_cache/

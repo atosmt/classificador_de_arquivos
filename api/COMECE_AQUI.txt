@@ -1,0 +1,6 @@
+1. Extraia este ZIP.
+2. Copie a pasta api/ para dentro do repositório classificador_de_arquivos.
+3. Leia api/README_API.md e instale Python + Tesseract.
+4. Use seu CSV privado para rodar exportar_modelo.py.
+5. Inicie uvicorn; abra /docs e teste uma imagem sem dados pessoais reais.
+6. Nenhum arquivo foi enviado ao GitHub automaticamente.
