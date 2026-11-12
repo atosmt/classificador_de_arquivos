@@ -1,7 +1,9 @@
 """API de classificação de RG. Os bytes das imagens não são persistidos."""
+import asyncio
 import base64
 import binascii
 import io
+
 from PIL import Image, UnidentifiedImageError
 
 import cv2
@@ -14,6 +16,7 @@ from .features import extrair_features
 from .modelo import MODELO, prever
 
 app = FastAPI(title='Classificador de RG — API', version='1.0.0')
+LIMITE_PROCESSAMENTOS = asyncio.Semaphore(2)
 LIMITE_BYTES = 5 * 1024 * 1024
 LIMITE_PIXELS = 12_000_000
 TIPOS_ACEITOS = {'image/jpeg', 'image/png', 'image/webp', 'image/bmp', 'image/tiff'}
@@ -107,7 +110,8 @@ async def predict(arquivo: UploadFile = File(...)):
         raise HTTPException(status_code=413, detail='Imagem maior que 5 MB')
     if not MODELO.is_file():
         raise HTTPException(status_code=503, detail='Modelo ainda não foi exportado')
-    return await run_in_threadpool(processar, dados)
+    async with LIMITE_PROCESSAMENTOS:
+        return await run_in_threadpool(processar, dados)
 
 
 @app.post('/predict/base64')
@@ -126,4 +130,5 @@ async def predict_base64(entrada: ImagemBase64):
         dados = base64.b64decode(texto, validate=True)
     except (binascii.Error, ValueError) as exc:
         raise HTTPException(status_code=422, detail='Base64 inválido') from exc
-    return await run_in_threadpool(processar, dados)
+    async with LIMITE_PROCESSAMENTOS:
+        return await run_in_threadpool(processar, dados)
