@@ -5,12 +5,20 @@ executar código. O bundle deve ser gerado pelo nosso exportador.
 """
 from functools import lru_cache
 from pathlib import Path
+import os
 
 import joblib
 import pandas as pd
 
-MODELO = Path(__file__).resolve().parents[1] / 'modelos' / 'modelo_api.joblib'
+CAMINHO_PADRAO = (
+    Path(__file__).resolve().parents[1]
+    / "modelos"
+    / "modelo_api.joblib"
+)
 
+MODELO = Path(
+    os.environ.get("MODELO_API_PATH") or CAMINHO_PADRAO
+)
 
 @lru_cache(maxsize=1)
 def carregar_modelo():
