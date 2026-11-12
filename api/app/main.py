@@ -1,6 +1,8 @@
 """API de classificação de RG. Os bytes das imagens não são persistidos."""
 import base64
 import binascii
+import io
+from PIL import Image, UnidentifiedImageError
 
 import cv2
 import numpy as np
@@ -21,19 +23,63 @@ class ImagemBase64(BaseModel):
     imagem_base64: str = Field(min_length=1, max_length=8_000_000)
 
 
-def decodificar_imagem(dados: bytes) -> np.ndarray:
-    if not dados or len(dados) > LIMITE_BYTES:
-        raise HTTPException(status_code=413, detail='Imagem vazia ou maior que 5 MB')
-    arr = np.frombuffer(dados, dtype=np.uint8)
-    # OpenCV pode falhar na decodificação de formatos comprimidos inválidos.
-    imagem = cv2.imdecode(arr, cv2.IMREAD_COLOR)
-    if imagem is None or imagem.ndim != 3:
-        raise HTTPException(status_code=422, detail='Arquivo não é uma imagem suportada')
-    altura, largura = imagem.shape[:2]
-    if altura <= 0 or largura <= 0 or altura * largura > LIMITE_PIXELS:
-        raise HTTPException(status_code=413, detail='Imagem com resolução muito alta')
-    return imagem
 
+def decodificar_imagem(dados: bytes) -> np.ndarray:
+    if not dados:
+        raise HTTPException(
+            status_code=422,
+            detail="Imagem vazia"
+        )
+
+    if len(dados) > LIMITE_BYTES:
+        raise HTTPException(
+            status_code=413,
+            detail="Imagem maior que 5 MB"
+        )
+
+    try:
+        with Image.open(io.BytesIO(dados)) as arquivo:
+            largura, altura = arquivo.size
+
+            if largura <= 0 or altura <= 0:
+                raise HTTPException(
+                    status_code=422,
+                    detail="Dimensões inválidas"
+                )
+
+            if largura * altura > LIMITE_PIXELS:
+                raise HTTPException(
+                    status_code=413,
+                    detail="Imagem com resolução muito alta"
+                )
+
+            formatos = {"JPEG", "PNG", "WEBP", "BMP", "TIFF"}
+
+            if arquivo.format not in formatos:
+                raise HTTPException(
+                    status_code=422,
+                    detail="Formato de imagem não suportado"
+                )
+
+    except (UnidentifiedImageError, OSError,
+            ValueError, Image.DecompressionBombError) as erro:
+        raise HTTPException(
+            status_code=422,
+            detail="Arquivo não é uma imagem válida"
+        ) from erro
+
+    imagem = cv2.imdecode(
+        np.frombuffer(dados, dtype=np.uint8),
+        cv2.IMREAD_COLOR
+    )
+
+    if imagem is None or imagem.ndim != 3:
+        raise HTTPException(
+            status_code=422,
+            detail="Arquivo não é uma imagem válida"
+        )
+
+    return imagem
 
 def processar(dados: bytes) -> dict:
     imagem = decodificar_imagem(dados)
