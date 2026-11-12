@@ -28,4 +28,4 @@ USER apiuser
 
 EXPOSE 8000
 
-CMD ["sh", "-c", "set -eu; umask 077; base64 -d /etc/secrets/modelo_api.joblib.b64 > \"$MODELO_API_PATH\"; exec uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-10000}"]
+CMD ["sh", "-c", "set -eu; umask 077; python -c 'import base64,gzip,os,pathlib; data=pathlib.Path(\"/etc/secrets/modelo_api.joblib.gz.b64\").read_bytes(); pathlib.Path(os.environ[\"MODELO_API_PATH\"]).write_bytes(gzip.decompress(base64.b64decode(data, validate=True)))'; exec uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-10000}"]
