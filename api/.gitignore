@@ -8,6 +8,7 @@
 *.tif
 *.pkl
 *.joblib
+*.b64
 .env
 .venv/
 __pycache__/
